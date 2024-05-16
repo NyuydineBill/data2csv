@@ -8,7 +8,7 @@ Django Admin Export Package is a Django app that enhances the Django admin inter
 You can install Django Admin Export Package via pip:
 
 ```bash
-pip install django-admin-export
+pip install -i https://test.pypi.org/simple/ django-admin-export
 ```
 
 Make sure to add `'admin_export'` to your `INSTALLED_APPS` in your Django project's settings file.

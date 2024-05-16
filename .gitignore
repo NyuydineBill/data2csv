@@ -1,0 +1,12 @@
+# Gitignore
+
+# Ignore build artifacts and distribution files
+build/
+dist/
+
+# Ignore egg-info folder
+*.egg-info/
+.env
+env
+myenv
+venv
