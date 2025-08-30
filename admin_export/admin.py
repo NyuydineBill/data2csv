@@ -241,13 +241,25 @@ class ExportMixin:
         # Add export actions
         for action_name in self.get_export_actions():
             if action_name == 'export_to_csv':
-                actions[action_name] = (self.export_to_csv, action_name, _("Export selected items to CSV"))
+                actions[action_name] = (self._export_to_csv_action, action_name, _("Export selected items to CSV"))
             elif action_name == 'export_to_excel':
-                actions[action_name] = (self.export_to_excel, action_name, _("Export selected items to Excel"))
+                actions[action_name] = (self._export_to_excel_action, action_name, _("Export selected items to Excel"))
             elif action_name == 'export_to_json':
-                actions[action_name] = (self.export_to_json, action_name, _("Export selected items to JSON"))
+                actions[action_name] = (self._export_to_json_action, action_name, _("Export selected items to JSON"))
         
         return actions
+    
+    def _export_to_csv_action(self, request, queryset):
+        """Wrapper for CSV export action."""
+        return self.export_to_csv(request, queryset)
+    
+    def _export_to_excel_action(self, request, queryset):
+        """Wrapper for Excel export action."""
+        return self.export_to_excel(request, queryset)
+    
+    def _export_to_json_action(self, request, queryset):
+        """Wrapper for JSON export action."""
+        return self.export_to_json(request, queryset)
 
 # Legacy functions for backward compatibility
 def export_to_csv(modeladmin, request, queryset):
