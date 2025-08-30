@@ -7,8 +7,8 @@ def read_readme():
         return f.read()
 
 setup(
-    name='django-admin-data-export',
-    version='1.0.6',
+    name='django_admin_data_export',
+    version='1.0.7',
     description='A comprehensive Django app that enhances the admin interface with advanced export functionality for CSV, Excel, and JSON formats.',
     long_description=read_readme(),
     long_description_content_type='text/markdown',
