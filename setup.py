@@ -7,14 +7,14 @@ def read_readme():
         return f.read()
 
 setup(
-    name='django-admin-export-tools',
-    version='1.0.3',
+    name='django-admin-data-export',
+    version='1.0.6',
     description='A comprehensive Django app that enhances the admin interface with advanced export functionality for CSV, Excel, and JSON formats.',
     long_description=read_readme(),
     long_description_content_type='text/markdown',
     author='Nyuydine Bill',
     author_email='billleynyuy@gmail.com',
-    url='https://github.com/NyuydineBill/django-admin-export-tools',
+    url='https://github.com/NyuydineBill/data2csv',
     packages=['admin_export'],
     include_package_data=True,
     license='MIT',
