@@ -238,35 +238,20 @@ class ExportMixin:
         """Override to add export actions."""
         actions = super().get_actions(request)
         
-        # Add export actions
+        # Add export actions using standalone functions
         for action_name in self.get_export_actions():
             if action_name == 'export_to_csv':
-                actions[action_name] = (self._export_to_csv_action, action_name, _("Export selected items to CSV"))
+                actions[action_name] = (export_to_csv, action_name, _("Export selected items to CSV"))
             elif action_name == 'export_to_excel':
-                actions[action_name] = (self._export_to_excel_action, action_name, _("Export selected items to Excel"))
+                actions[action_name] = (export_to_excel, action_name, _("Export selected items to Excel"))
             elif action_name == 'export_to_json':
-                actions[action_name] = (self._export_to_json_action, action_name, _("Export selected items to JSON"))
+                actions[action_name] = (export_to_json, action_name, _("Export selected items to JSON"))
         
         return actions
-    
-    def _export_to_csv_action(self, request, queryset, *args, **kwargs):
-        """Wrapper for CSV export action."""
-        # Call the method directly on self (which is the ModelAdmin instance)
-        return self.export_to_csv(request, queryset)
-    
-    def _export_to_excel_action(self, request, queryset, *args, **kwargs):
-        """Wrapper for Excel export action."""
-        # Call the method directly on self (which is the ModelAdmin instance)
-        return self.export_to_excel(request, queryset)
-    
-    def _export_to_json_action(self, request, queryset, *args, **kwargs):
-        """Wrapper for JSON export action."""
-        # Call the method directly on self (which is the ModelAdmin instance)
-        return self.export_to_json(request, queryset)
 
 # Legacy functions for backward compatibility
 def export_to_csv(modeladmin, request, queryset):
-    """Legacy export function for backward compatibility."""
+    """Export function for CSV format."""
     if hasattr(modeladmin, 'export_to_csv'):
         return modeladmin.export_to_csv(request, queryset)
     
@@ -284,7 +269,7 @@ def export_to_csv(modeladmin, request, queryset):
     return response
 
 def export_to_excel(modeladmin, request, queryset):
-    """Legacy export function for backward compatibility."""
+    """Export function for Excel format."""
     if hasattr(modeladmin, 'export_to_excel'):
         return modeladmin.export_to_excel(request, queryset)
     
@@ -307,6 +292,28 @@ def export_to_excel(modeladmin, request, queryset):
     workbook.save(response)
     return response
 
-# Set descriptions for legacy functions
+def export_to_json(modeladmin, request, queryset):
+    """Export function for JSON format."""
+    if hasattr(modeladmin, 'export_to_json'):
+        return modeladmin.export_to_json(request, queryset)
+    
+    # Fallback to basic export
+    response = HttpResponse(content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="exported_data.json"'
+    
+    data = []
+    fields = [field.name for field in queryset.model._meta.fields]
+    
+    for obj in queryset:
+        obj_data = {}
+        for field in fields:
+            obj_data[field] = getattr(obj, field)
+        data.append(obj_data)
+    
+    response.write(json.dumps(data, indent=2, default=str))
+    return response
+
+# Set descriptions for export functions
 export_to_csv.short_description = _("Export selected items to CSV")
 export_to_excel.short_description = _("Export selected items to Excel")
+export_to_json.short_description = _("Export selected items to JSON")
