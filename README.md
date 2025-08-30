@@ -25,7 +25,7 @@ A comprehensive Django app that enhances the Django admin interface by providing
 ### Installation
 
 ```bash
-pip install django-admin-export
+pip install django-admin-export-tools
 ```
 
 ### Basic Usage
