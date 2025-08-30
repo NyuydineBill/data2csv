@@ -84,7 +84,7 @@ class ExportMixin:
             return queryset[:max_rows]
         return queryset
     
-    def export_to_csv(self, request, queryset):
+    def export_to_csv(self, request, queryset, *args, **kwargs):
         """Exports to CSV format."""
         try:
             fields = self.get_export_fields(request)
@@ -116,7 +116,7 @@ class ExportMixin:
             messages.error(request, f"Export failed: {str(e)}")
             return HttpResponse(status=500)
     
-    def export_to_excel(self, request, queryset):
+    def export_to_excel(self, request, queryset, *args, **kwargs):
         """Exports to Excel format."""
         try:
             fields = self.get_export_fields(request)
@@ -167,7 +167,7 @@ class ExportMixin:
             messages.error(request, f"Export failed: {str(e)}")
             return HttpResponse(status=500)
     
-    def export_to_json(self, request, queryset):
+    def export_to_json(self, request, queryset, *args, **kwargs):
         """Exports to JSON format."""
         try:
             fields = self.get_export_fields(request)
@@ -270,7 +270,7 @@ def export_to_csv(modeladmin, request, queryset):
 
 def export_to_excel(modeladmin, request, queryset):
     """Legacy export function for backward compatibility."""
-    if hasattr(modeladmin, 'export_to_csv'):
+    if hasattr(modeladmin, 'export_to_excel'):
         return modeladmin.export_to_excel(request, queryset)
     
     # Fallback to basic export
