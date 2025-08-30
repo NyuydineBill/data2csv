@@ -23,7 +23,7 @@ For this workflow, you'll need to manually manage versions in your code before m
 
 2. **Update version in `admin_export/__init__.py`**:
    ```python
-   __version__ = '1.0.1'  # Change this before merging
+   __version__ = '1.0.3'  # Change this before merging
    ```
 
 3. **Commit and push**:
@@ -93,9 +93,9 @@ Since this workflow doesn't auto-bump versions, you need to:
 3. **Example workflow**:
    ```bash
    # Make changes in feature branch
-   # Update version to 1.0.1
+   # Update version to 1.0.4
    git add setup.py admin_export/__init__.py
-   git commit -m "Bump version to 1.0.1"
+   git commit -m "Bump version to 1.0.4"
    # Create PR and merge to main
    # GitHub Actions automatically builds and publishes
    ```
@@ -171,5 +171,5 @@ If you encounter issues:
 
 Your users can then immediately install the latest version with:
 ```bash
-pip install django-admin-export-tools
+pip install django-admin-data-export
 ``` 

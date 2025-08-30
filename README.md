@@ -1,9 +1,9 @@
 # Django Admin Export Package
 
-[![PyPI version](https://badge.fury.io/py/django-admin-export.svg)](https://badge.fury.io/py/django-admin-export)
-[![Python versions](https://img.shields.io/pypi/pyversions/django-admin-export.svg)](https://pypi.org/project/django-admin-export/)
-[![Django versions](https://img.shields.io/pypi/djversions/django-admin-export.svg)](https://pypi.org/project/django-admin-export/)
-[![License](https://img.shields.io/pypi/l/django-admin-export.svg)](https://pypi.org/project/django-admin-export/)
+[![PyPI version](https://badge.fury.io/py/django-admin-data-export.svg)](https://badge.fury.io/py/django-admin-data-export)
+[![Python versions](https://img.shields.io/pypi/pyversions/django-admin-data-export.svg)](https://pypi.org/project/django-admin-data-export/)
+[![Django versions](https://img.shields.io/pypi/djversions/django-admin-data-export.svg)](https://pypi.org/project/django-admin-data-export/)
+[![License](https://img.shields.io/pypi/l/django-admin-data-export.svg)](https://pypi.org/project/django-admin-data-export/)
 
 A comprehensive Django app that enhances the Django admin interface by providing advanced export functionality for CSV, Excel, and JSON formats. Built with modern Python practices, comprehensive error handling, and extensive customization options.
 
@@ -25,7 +25,7 @@ A comprehensive Django app that enhances the Django admin interface by providing
 ### Installation
 
 ```bash
-pip install django-admin-export-tools
+pip install django-admin-data-export
 ```
 
 ### Basic Usage
