@@ -249,15 +249,15 @@ class ExportMixin:
         
         return actions
     
-    def _export_to_csv_action(self, request, queryset):
+    def _export_to_csv_action(self, request, queryset, *args, **kwargs):
         """Wrapper for CSV export action."""
         return self.export_to_csv(request, queryset)
     
-    def _export_to_excel_action(self, request, queryset):
+    def _export_to_excel_action(self, request, queryset, *args, **kwargs):
         """Wrapper for Excel export action."""
         return self.export_to_excel(request, queryset)
     
-    def _export_to_json_action(self, request, queryset):
+    def _export_to_json_action(self, request, queryset, *args, **kwargs):
         """Wrapper for JSON export action."""
         return self.export_to_json(request, queryset)
 
