@@ -1,0 +1,24 @@
+include README.md
+include requirements.txt
+include requirements-dev.txt
+include pyproject.toml
+
+# Include only the admin_export package
+recursive-include admin_export *.py
+recursive-include examples *.py
+recursive-include tests *.py
+
+# Exclude everything else
+global-exclude *.pyc
+global-exclude __pycache__
+global-exclude .git*
+global-exclude .DS_Store
+global-exclude *.egg-info
+global-exclude build/
+global-exclude dist/
+global-exclude venv/
+global-exclude app/
+global-exclude data2csv/
+global-exclude manage.py
+global-exclude db.sqlite3
+global-exclude *.log 

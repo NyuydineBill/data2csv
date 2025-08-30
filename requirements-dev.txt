@@ -1,0 +1,31 @@
+# Development dependencies for django-admin-export
+
+# Testing
+pytest>=6.0.0
+pytest-django>=4.0.0
+pytest-cov>=3.0.0
+pytest-mock>=3.6.0
+
+# Code quality
+black>=22.0.0
+flake8>=4.0.0
+isort>=5.0.0
+mypy>=0.950
+
+# Documentation
+Sphinx>=4.0.0
+sphinx-rtd-theme>=1.0.0
+sphinx-autodoc-typehints>=1.12.0
+
+# Development tools
+pre-commit>=2.20.0
+tox>=3.25.0
+coverage>=6.0.0
+
+# Django development
+django-debug-toolbar>=3.7.0
+django-extensions>=3.2.0
+
+# Additional testing
+factory-boy>=3.2.0
+faker>=18.0.0 

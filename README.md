@@ -1,76 +1,411 @@
-```markdown
 # Django Admin Export Package
 
-Django Admin Export Package is a Django app that enhances the Django admin interface by providing custom admin actions for exporting selected items to CSV or Excel format.
+[![PyPI version](https://badge.fury.io/py/django-admin-export.svg)](https://badge.fury.io/py/django-admin-export)
+[![Python versions](https://img.shields.io/pypi/pyversions/django-admin-export.svg)](https://pypi.org/project/django-admin-export/)
+[![Django versions](https://img.shields.io/pypi/djversions/django-admin-export.svg)](https://pypi.org/project/django-admin-export/)
+[![License](https://img.shields.io/pypi/l/django-admin-export.svg)](https://pypi.org/project/django-admin-export/)
 
-## Installation
+A comprehensive Django app that enhances the Django admin interface by providing advanced export functionality for CSV, Excel, and JSON formats. Built with modern Python practices, comprehensive error handling, and extensive customization options.
 
-You can install Django Admin Export Package via pip:
+## ✨ Features
+
+- **Multiple Export Formats**: Support for CSV, Excel (XLSX), and JSON exports
+- **Easy Integration**: Simple mixin-based approach for ModelAdmin classes
+- **Field Customization**: Select specific fields, exclude unwanted ones, and customize labels
+- **Advanced Formatting**: Automatic column sizing, header styling, and data type handling
+- **Error Handling**: Comprehensive error handling with user-friendly messages
+- **Progress Tracking**: Built-in progress indicators for large exports
+- **Internationalization**: Full i18n support with Django's translation system
+- **Backward Compatibility**: Legacy function support for existing implementations
+- **Logging & Monitoring**: Built-in logging and audit trails
+- **Configuration Options**: Extensive customization through Django settings
+
+## 🚀 Quick Start
+
+### Installation
 
 ```bash
-pip install -i https://test.pypi.org/simple/ django-admin-export
+pip install django-admin-export
 ```
 
-Make sure to add `'admin_export'` to your `INSTALLED_APPS` in your Django project's settings file.
+### Basic Usage
 
-## Usage
+Add the app to your `INSTALLED_APPS`:
 
-### Registering Admin Actions
+```python
+INSTALLED_APPS = [
+    # ... other apps
+    'admin_export',
+]
+```
 
-To use the export functionality in the Django admin interface, follow these steps:
-
-1. Import the `export_to_csv` and `export_to_excel` functions from `admin_export.admin`.
-2. Register these functions as admin actions for the desired models in your `admin.py` file.
+Use the `ExportMixin` in your ModelAdmin:
 
 ```python
 from django.contrib import admin
+from admin_export.admin import ExportMixin
 from .models import Product
-from admin_export.admin import export_to_csv, export_to_excel
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'quantity')
-    actions = [export_to_csv, export_to_excel]
+class ProductAdmin(ExportMixin, admin.ModelAdmin):
+    list_display = ('name', 'price', 'quantity', 'created_at')
+    
+    # Export configuration
+    export_fields = ['name', 'price', 'quantity', 'created_at']
+    export_exclude_fields = ['id', 'updated_at']
+    export_field_labels = {
+        'name': 'Product Name',
+        'price': 'Price (USD)',
+        'quantity': 'Stock Quantity'
+    }
+    export_filename = 'products_export'
 ```
 
-### Exporting Data
+## 📚 Advanced Usage
 
-In the Django admin interface, navigate to the list view of a model and select the objects you want to export.
-From the "Actions" dropdown menu, select "Export selected items to CSV" or "Export selected items to Excel" to download the exported file.
+### Custom Field Selection
 
-## Configuration Options
-
-Django Admin Export Package supports the following configuration options:
-
-- `EXPORT_CSV_DELIMITER`: Customize the delimiter used in the exported CSV file (default is `,`).
-- `EXPORT_EXCEL_SHEET_NAME`: Customize the name of the Excel worksheet in the exported Excel file (default is "Sheet1").
-
-You can override these options in your Django project's settings file.
-
-## Troubleshooting
-
-If you encounter any issues while using Django Admin Export Package, refer to the following troubleshooting tips:
-
-- **Error: Failed to import test module**: This error may occur if your test file is not located in the same directory as your Django app. Make sure to place your test file in the correct location and adjust the import statements accordingly.
-
-## Contributing
-
-Contributions to Django Admin Export Package are welcome! To contribute, follow these steps:
-
-1. Fork the repository on GitHub.
-2. Create a new branch for your feature or bug fix.
-3. Make your changes and write tests for them.
-4. Submit a pull request with your changes.
-
-## License
-
-Django Admin Export Package is released under the MIT License. See the [LICENSE](https://github.com/NyuydineBill/django-admin-export/blob/main/LICENSE) file for details.
-
-## Feedback and Support
-
-For questions, feedback, or support requests, please contact the maintainers of Django Admin Export Package at [billleynyuy@gmail.com](mailto:billleynyuy@gmail.com).
-
-Feel free to customize this documentation template to fit the specific features and configuration options of your package. Let me know if you need further assistance or if you have any questions!
+```python
+@admin.register(Product)
+class ProductAdmin(ExportMixin, admin.ModelAdmin):
+    # Export only specific fields
+    export_fields = ['name', 'price', 'category__name', 'supplier__company_name']
+    
+    # Exclude sensitive fields
+    export_exclude_fields = ['password', 'api_key', 'internal_notes']
+    
+    # Custom field labels
+    export_field_labels = {
+        'name': 'Product Name',
+        'category__name': 'Category',
+        'supplier__company_name': 'Supplier Company'
+    }
 ```
 
-You can copy this markdown text and paste it into your documentation file. Feel free to customize it further according to your needs. Let me know if you need any further assistance!
+### Format-Specific Configuration
+
+```python
+@admin.register(Product)
+class ProductAdmin(ExportMixin, admin.ModelAdmin):
+    # Enable only specific formats
+    enable_csv_export = True
+    enable_excel_export = True
+    enable_json_export = False
+    
+    # Custom Excel sheet name
+    export_filename = 'product_catalog'
+    
+    # Limit export size
+    export_max_rows = 5000
+```
+
+### Advanced Excel Styling
+
+The package automatically applies professional styling to Excel exports:
+- Bold headers with gray background
+- Auto-adjusted column widths
+- Proper data type handling
+- Clean, readable formatting
+
+## ⚙️ Configuration
+
+### Django Settings
+
+Add these to your Django settings for global configuration:
+
+```python
+# Export configuration
+EXPORT_CSV_DELIMITER = ','  # CSV delimiter
+EXPORT_EXCEL_SHEET_NAME = 'Data Export'  # Default Excel sheet name
+EXPORT_MAX_ROWS = 10000  # Maximum rows per export
+EXPORT_ENABLE_PROGRESS = True  # Enable progress tracking
+EXPORT_DEFAULT_FILENAME = 'export'  # Default filename prefix
+EXPORT_INCLUDE_META_FIELDS = False  # Include Django meta fields
+EXPORT_ENABLE_LOGGING = True  # Enable export logging
+EXPORT_LOG_LEVEL = 'INFO'  # Log level for exports
+```
+
+### Model-Specific Configuration
+
+```python
+@admin.register(Product)
+class ProductAdmin(ExportMixin, admin.ModelAdmin):
+    # Basic export settings
+    export_fields = ['name', 'price', 'category', 'created_at']
+    export_exclude_fields = ['id', 'updated_at', 'deleted_at']
+    
+    # Custom labels and formatting
+    export_field_labels = {
+        'name': 'Product Name',
+        'price': 'Price (USD)',
+        'category': 'Product Category',
+        'created_at': 'Date Added'
+    }
+    
+    # File naming
+    export_filename = 'product_catalog'
+    
+    # Export limits
+    export_max_rows = 5000
+    
+    # Format selection
+    enable_csv_export = True
+    enable_excel_export = True
+    enable_json_export = False
+```
+
+## 🔧 API Reference
+
+### ExportMixin
+
+The main mixin class that provides export functionality.
+
+#### Attributes
+
+- `export_fields`: List of field names to export (None = all fields)
+- `export_exclude_fields`: List of field names to exclude
+- `export_field_labels`: Dictionary mapping field names to custom labels
+- `export_filename`: Custom filename for exports
+- `export_max_rows`: Maximum rows to export
+- `enable_csv_export`: Enable CSV export (default: True)
+- `enable_excel_export`: Enable Excel export (default: True)
+- `enable_json_export`: Enable JSON export (default: False)
+
+#### Methods
+
+- `get_export_fields(request)`: Get list of fields to export
+- `get_export_field_labels(request)`: Get custom field labels
+- `get_export_filename(request, format_type)`: Generate export filename
+- `get_export_queryset(request, queryset)`: Get queryset for export
+- `export_to_csv(request, queryset)`: Export to CSV
+- `export_to_excel(request, queryset)`: Export to Excel
+- `export_to_json(request, queryset)`: Export to JSON
+
+### Utility Functions
+
+```python
+from admin_export.utils import get_formatter, validate_export_config
+
+# Get formatter for specific format
+formatter = get_formatter('csv', delimiter=';', include_headers=True)
+
+# Validate export configuration
+config = validate_export_config({
+    'format': 'xlsx',
+    'max_rows': 5000,
+    'sheet_name': 'Custom Sheet'
+})
+```
+
+### Forms
+
+```python
+from admin_export.forms import ExportConfigurationForm, BulkExportForm
+
+# Export configuration form
+form = ExportConfigurationForm(
+    model_fields=Product._meta.fields,
+    initial={'format': 'csv', 'max_rows': 1000}
+)
+
+# Bulk export form
+bulk_form = BulkExportForm(available_models=[
+    ('app.Product', 'Products'),
+    ('app.Category', 'Categories')
+])
+```
+
+## 🧪 Testing
+
+Run the test suite:
+
+```bash
+python manage.py test admin_export
+```
+
+Or use pytest:
+
+```bash
+pytest tests/
+```
+
+## 📖 Examples
+
+### Basic Product Export
+
+```python
+from django.contrib import admin
+from admin_export.admin import ExportMixin
+from .models import Product
+
+@admin.register(Product)
+class ProductAdmin(ExportMixin, admin.ModelAdmin):
+    list_display = ('name', 'price', 'category', 'stock', 'created_at')
+    list_filter = ('category', 'created_at', 'is_active')
+    search_fields = ('name', 'description')
+    
+    # Export configuration
+    export_fields = ['name', 'price', 'category', 'stock', 'created_at']
+    export_exclude_fields = ['id', 'updated_at', 'deleted_at']
+    export_field_labels = {
+        'name': 'Product Name',
+        'price': 'Price (USD)',
+        'category': 'Category',
+        'stock': 'Stock Level',
+        'created_at': 'Date Added'
+    }
+    export_filename = 'product_inventory'
+```
+
+### User Management Export
+
+```python
+from django.contrib.auth.admin import UserAdmin
+from admin_export.admin import ExportMixin
+
+class CustomUserAdmin(ExportMixin, UserAdmin):
+    # Export configuration
+    export_fields = ['username', 'email', 'first_name', 'last_name', 'date_joined', 'is_active']
+    export_exclude_fields = ['password', 'last_login', 'groups', 'user_permissions']
+    export_field_labels = {
+        'username': 'Username',
+        'email': 'Email Address',
+        'first_name': 'First Name',
+        'last_name': 'Last Name',
+        'date_joined': 'Registration Date',
+        'is_active': 'Account Status'
+    }
+    export_filename = 'user_management'
+    
+    # Enable only CSV and Excel
+    enable_csv_export = True
+    enable_excel_export = True
+    enable_json_export = False
+
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
+```
+
+### Advanced Export with Custom Logic
+
+```python
+@admin.register(Order)
+class OrderAdmin(ExportMixin, admin.ModelAdmin):
+    list_display = ('order_number', 'customer', 'total_amount', 'status', 'created_at')
+    
+    def get_export_fields(self, request):
+        """Dynamic field selection based on user permissions."""
+        if request.user.is_superuser:
+            return ['order_number', 'customer', 'total_amount', 'status', 'created_at', 'notes']
+        else:
+            return ['order_number', 'customer', 'total_amount', 'status', 'created_at']
+    
+    def get_export_queryset(self, request, queryset):
+        """Filter queryset based on user permissions."""
+        if not request.user.is_superuser:
+            return queryset.filter(status__in=['confirmed', 'shipped'])
+        return queryset
+    
+    def export_to_excel(self, request, queryset):
+        """Custom Excel export with additional formatting."""
+        response = super().export_to_excel(request, queryset)
+        
+        # Add custom logic here if needed
+        return response
+```
+
+## 🔒 Security & Permissions
+
+The package respects Django's permission system:
+
+- Users can only export data they have permission to view
+- Export actions are automatically filtered based on user permissions
+- Sensitive fields can be excluded from exports
+- Audit logging tracks all export activities
+
+## 🌍 Internationalization
+
+Full support for Django's internationalization system:
+
+```python
+from django.utils.translation import gettext_lazy as _
+
+@admin.register(Product)
+class ProductAdmin(ExportMixin, admin.ModelAdmin):
+    export_field_labels = {
+        'name': _('Product Name'),
+        'price': _('Price'),
+        'category': _('Category'),
+    }
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Export fails silently**: Check Django logs and ensure proper error handling
+2. **Large exports timeout**: Adjust `EXPORT_MAX_ROWS` setting
+3. **Field not found errors**: Verify field names in `export_fields`
+4. **Permission denied**: Check user permissions for the model
+
+### Debug Mode
+
+Enable debug logging:
+
+```python
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'admin_export': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Setup
+
+```bash
+git clone https://github.com/NyuydineBill/data2csv.git
+cd data2csv
+pip install -e ".[dev]"
+python manage.py test
+```
+
+### Code Style
+
+We use:
+- [Black](https://black.readthedocs.io/) for code formatting
+- [Flake8](https://flake8.pycqa.org/) for linting
+- [isort](https://pycqa.github.io/isort/) for import sorting
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Django community for the excellent framework
+- OpenPyXL team for Excel support
+- All contributors and users of this package
+
+## 📞 Support
+
+- **Documentation**: [GitHub README](https://github.com/NyuydineBill/data2csv#readme)
+- **Issues**: [GitHub Issues](https://github.com/NyuydineBill/data2csv/issues)
+- **Email**: billleynyuy@gmail.com
+
+---
+
+**Made with ❤️ by Nyuydine Bill**
