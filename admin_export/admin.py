@@ -42,7 +42,7 @@ class ExportMixin:
     
     enable_csv_export: bool = True
     enable_excel_export: bool = True
-    enable_json_export: bool = False
+    enable_json_export: bool = True
     
     def get_export_fields(self, request) -> List[str]:
         """Returns fields to export."""
