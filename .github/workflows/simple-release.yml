@@ -1,4 +1,4 @@
-name: Simple Release to PyPI
+name: Test and Build Package
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
       run: |
         python manage.py test tests.test_basic tests.test_export_mixin --verbosity=2
 
-  release:
+  build:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -54,34 +54,34 @@ jobs:
       run: |
         twine check dist/*
     
-    - name: Publish to PyPI
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: |
-        twine upload dist/*
+    # - name: Publish to PyPI
+    #   env:
+    #     TWINE_USERNAME: __token__
+    #     TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+    #   run: |
+    #     twine upload dist/*
     
-    - name: Create Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ github.run_number }}
-        release_name: Release v${{ github.run_number }}
-        body: |
-          # Release v${{ github.run_number }}
-          
-          **Build:** #${{ github.run_number }}
-          **Commit:** ${{ github.sha }}
-          
-          ## What's New
-          - Automated CI/CD pipeline
-          - Enhanced export functionality
-          - Comprehensive testing
-          
-          ## Installation
-          ```bash
-          pip install django-admin-export-tools
-          ```
-        draft: false
-        prerelease: false 
+    # - name: Create Release
+    #   uses: actions/create-release@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     tag_name: v${{ github.run_number }}
+    #     release_name: Release v${{ github.run_number }}
+    #     body: |
+    #       # Release v${{ github.run_number }}
+    #       
+    #       **Build:** #${{ github.run_number }}
+    #       **Commit:** ${{ github.sha }}
+    #       
+    #       ## What's New
+    #       - Automated CI/CD pipeline
+    #       - Enhanced export functionality
+    #       - Comprehensive testing
+    #       
+    #       ## Installation
+    #       ```bash
+    #       pip install django-admin-export-tools
+    #       ```
+    #     draft: false
+    #     prerelease: false 
