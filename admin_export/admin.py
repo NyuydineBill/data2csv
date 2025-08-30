@@ -251,15 +251,48 @@ class ExportMixin:
     
     def _export_to_csv_action(self, request, queryset, *args, **kwargs):
         """Wrapper for CSV export action."""
-        return self.export_to_csv(request, queryset)
+        # Create a temporary instance to call the method
+        temp_instance = self.__class__()
+        temp_instance.model = self.model
+        temp_instance.export_fields = getattr(self, 'export_fields', None)
+        temp_instance.export_exclude_fields = getattr(self, 'export_exclude_fields', None)
+        temp_instance.export_field_labels = getattr(self, 'export_field_labels', None)
+        temp_instance.export_filename = getattr(self, 'export_filename', None)
+        temp_instance.export_max_rows = getattr(self, 'export_max_rows', None)
+        temp_instance.enable_csv_export = getattr(self, 'enable_csv_export', True)
+        temp_instance.enable_excel_export = getattr(self, 'enable_excel_export', True)
+        temp_instance.enable_json_export = getattr(self, 'enable_json_export', False)
+        return temp_instance.export_to_csv(request, queryset)
     
     def _export_to_excel_action(self, request, queryset, *args, **kwargs):
         """Wrapper for Excel export action."""
-        return self.export_to_excel(request, queryset)
+        # Create a temporary instance to call the method
+        temp_instance = self.__class__()
+        temp_instance.model = self.model
+        temp_instance.export_fields = getattr(self, 'export_fields', None)
+        temp_instance.export_exclude_fields = getattr(self, 'export_exclude_fields', None)
+        temp_instance.export_field_labels = getattr(self, 'export_field_labels', None)
+        temp_instance.export_filename = getattr(self, 'export_filename', None)
+        temp_instance.export_max_rows = getattr(self, 'export_max_rows', None)
+        temp_instance.enable_csv_export = getattr(self, 'enable_csv_export', True)
+        temp_instance.enable_excel_export = getattr(self, 'enable_excel_export', True)
+        temp_instance.enable_json_export = getattr(self, 'enable_json_export', False)
+        return temp_instance.export_to_excel(request, queryset)
     
     def _export_to_json_action(self, request, queryset, *args, **kwargs):
         """Wrapper for JSON export action."""
-        return self.export_to_json(request, queryset)
+        # Create a temporary instance to call the method
+        temp_instance = self.__class__()
+        temp_instance.model = self.model
+        temp_instance.export_fields = getattr(self, 'export_fields', None)
+        temp_instance.export_exclude_fields = getattr(self, 'export_exclude_fields', None)
+        temp_instance.export_field_labels = getattr(self, 'export_field_labels', None)
+        temp_instance.export_filename = getattr(self, 'export_filename', None)
+        temp_instance.export_max_rows = getattr(self, 'export_max_rows', None)
+        temp_instance.enable_csv_export = getattr(self, 'enable_csv_export', True)
+        temp_instance.enable_excel_export = getattr(self, 'enable_excel_export', True)
+        temp_instance.enable_json_export = getattr(self, 'enable_json_export', False)
+        return temp_instance.export_to_json(request, queryset)
 
 # Legacy functions for backward compatibility
 def export_to_csv(modeladmin, request, queryset):

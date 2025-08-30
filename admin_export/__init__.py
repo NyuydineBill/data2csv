@@ -23,7 +23,7 @@ Usage:
         export_field_labels = {'name': 'Full Name'}
 """
 
-__version__ = '1.0.10'
+__version__ = '1.0.11'
 __author__ = 'Nyuydine Bill'
 __email__ = 'billleynyuy@gmail.com'
 __license__ = 'MIT'
