@@ -88,7 +88,7 @@ class ExportMixinBasicTestCase(TestCase):
     def test_get_export_actions(self):
         """Tests getting export action names."""
         actions = self.admin.get_export_actions()
-        expected_actions = ['export_to_csv', 'export_to_excel']
+        expected_actions = ['export_to_csv', 'export_to_excel', 'export_to_json']
         self.assertEqual(actions, expected_actions)
         
         self.admin.enable_json_export = True
@@ -117,7 +117,7 @@ class ExportMixinBasicTestCase(TestCase):
         self.assertEqual(self.admin.export_max_rows, 100)
         self.assertTrue(self.admin.enable_csv_export)
         self.assertTrue(self.admin.enable_excel_export)
-        self.assertFalse(self.admin.enable_json_export)
+        self.assertTrue(self.admin.enable_json_export)
 
 
 class ExportUtilsTestCase(TestCase):
@@ -272,7 +272,7 @@ class ExportMixinIntegrationTestCase(TestCase):
         self.assertEqual(self.admin.export_max_rows, 100)
         self.assertTrue(self.admin.enable_csv_export)
         self.assertTrue(self.admin.enable_excel_export)
-        self.assertFalse(self.admin.enable_json_export)
+        self.assertTrue(self.admin.enable_json_export)
     
     def test_export_mixin_configuration(self):
         """Tests ExportMixin configuration methods."""
@@ -294,5 +294,5 @@ class ExportMixinIntegrationTestCase(TestCase):
         self.assertTrue(filename.endswith('.csv'))
         
         actions = self.admin.get_export_actions()
-        expected_actions = ['export_to_csv', 'export_to_excel']
+        expected_actions = ['export_to_csv', 'export_to_excel', 'export_to_json']
         self.assertEqual(actions, expected_actions) 
