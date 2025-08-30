@@ -1,38 +1,37 @@
 # Automated Deployment Guide
 
-This guide explains how to set up automated deployment to PyPI using GitHub Actions with smart version management.
+This guide explains how to set up automated deployment to PyPI using GitHub Actions.
 
 ## What This Does
 
 When you merge code to the `main` branch, the workflow will automatically:
 
 1. ✅ **Run tests** on Python 3.11 + Django
-2. ✅ **Smart version management** - Auto-increment or manual specification
-3. ✅ **Build the package** (source and wheel distributions)
-4. ✅ **Validate package metadata** using `twine check`
-5. ✅ **Upload to PyPI** using your API token
-6. ✅ **Create a GitHub release** with proper versioning
+2. ✅ **Build the package** (source and wheel distributions)
+3. ✅ **Validate package metadata** using `twine check`
+4. ✅ **Upload to PyPI** using your API token
+5. ✅ **Create a GitHub release** with build number
 
-## Smart Version Management
+## Version Management
 
-### Automatic Version Bumping
+For this workflow, you'll need to manually manage versions in your code before merging:
 
-The workflow automatically determines version bumps based on commit messages:
+1. **Update version in `setup.py`**:
+   ```python
+   version='1.0.1',  # Change this before merging
+   ```
 
-- **`[patch]`** - Increments patch version (1.0.0 → 1.0.1)
-- **`[minor]`** - Increments minor version (1.0.0 → 1.1.0)  
-- **`[major]`** - Increments major version (1.0.0 → 2.0.0)
-- **Default** - Automatically bumps patch version
+2. **Update version in `admin_export/__init__.py`**:
+   ```python
+   __version__ = '1.0.1'  # Change this before merging
+   ```
 
-### Manual Version Specification
-
-You can specify exact versions in commit messages:
-
-```
-git commit -m "Add new feature version: 2.0.0"
-```
-
-This will set the version to exactly 2.0.0 instead of auto-incrementing.
+3. **Commit and push**:
+   ```bash
+   git add setup.py admin_export/__init__.py
+   git commit -m "Bump version to 1.0.1"
+   git push origin main
+   ```
 
 ## Setup Steps
 
@@ -58,15 +57,13 @@ git push origin main
 
 Now every time you merge to `main`, your package will automatically:
 - Get tested
-- Get version bumped
 - Get built  
 - Get uploaded to PyPI
 - Get a new release
 
 ## Workflow Files
 
-- **`.github/workflows/smart-release.yml`** - **RECOMMENDED** - Smart version management
-- **`.github/workflows/release.yml`** - Basic version bumping
+- **`.github/workflows/simple-release.yml`** - Simple CI/CD pipeline
 
 ## How It Works
 
@@ -76,37 +73,32 @@ Now every time you merge to `main`, your package will automatically:
 
 ### On Main Branch Push
 - Runs tests
-- If tests pass, determines version strategy
-- Bumps version automatically or uses manual specification
-- Builds package
+- If tests pass, builds package
 - Uploads to PyPI
-- Creates GitHub release with proper versioning
+- Creates GitHub release
 
-## Version Management Examples
+## Manual Version Management
 
-### Automatic Patch Bump (Default)
-```bash
-git commit -m "Fix bug in export functionality"
-# Results in: 1.0.0 → 1.0.1
-```
+Since this workflow doesn't auto-bump versions, you need to:
 
-### Automatic Minor Bump
-```bash
-git commit -m "Add JSON export support [minor]"
-# Results in: 1.0.0 → 1.1.0
-```
+1. **Before merging to main**, update versions in:
+   - `setup.py`
+   - `admin_export/__init__.py`
 
-### Automatic Major Bump
-```bash
-git commit -m "Breaking changes in API [major]"
-# Results in: 1.0.0 → 2.0.0
-```
+2. **Use semantic versioning**:
+   - **Patch** (1.0.0 → 1.0.1): Bug fixes
+   - **Minor** (1.0.0 → 1.1.0): New features
+   - **Major** (1.0.0 → 2.0.0): Breaking changes
 
-### Manual Version
-```bash
-git commit -m "Release version 2.0.0 version: 2.0.0"
-# Results in: Exact version 2.0.0
-```
+3. **Example workflow**:
+   ```bash
+   # Make changes in feature branch
+   # Update version to 1.0.1
+   git add setup.py admin_export/__init__.py
+   git commit -m "Bump version to 1.0.1"
+   # Create PR and merge to main
+   # GitHub Actions automatically builds and publishes
+   ```
 
 ## Manual Release
 
@@ -126,7 +118,7 @@ twine upload dist/*
 
 1. **Tests failing**: Check the Actions tab for error details
 2. **PyPI upload failing**: Verify your `PYPI_API_TOKEN` secret
-3. **Version conflicts**: The workflow automatically handles version conflicts
+3. **Version conflicts**: Ensure version in `setup.py` is unique
 4. **Git push failing**: Ensure the workflow has proper permissions
 
 ### Debug Mode
@@ -145,7 +137,6 @@ Add `--verbose` to see detailed output:
 - The token is stored securely in GitHub Secrets
 - Only runs on main branch pushes (not PRs)
 - Tests run before any deployment
-- Version bumping is automated and secure
 
 ## Customization
 
@@ -155,7 +146,6 @@ You can modify the workflow to:
 - Include additional testing tools
 - Add deployment to other package indexes
 - Customize release notes format
-- Add changelog generation
 
 ## Support
 
@@ -165,20 +155,16 @@ If you encounter issues:
 2. Verify your PyPI token is valid
 3. Ensure all dependencies are in `requirements.txt`
 4. Check that tests pass locally first
-5. Verify commit message format for version control
+5. Verify version numbers are updated before merging
 
 ## Example Workflow
 
 1. **Make changes** in a feature branch
-2. **Create PR** to main
-3. **Merge PR** with appropriate version tag:
-   - `[patch]` for bug fixes
-   - `[minor]` for new features
-   - `[major]` for breaking changes
-   - `version: X.Y.Z` for exact versions
-4. **GitHub Actions automatically:**
+2. **Update version** in `setup.py` and `__init__.py`
+3. **Create PR** to main
+4. **Merge PR** to main
+5. **GitHub Actions automatically:**
    - Tests everything
-   - Bumps version appropriately
    - Builds package
    - Uploads to PyPI
    - Creates release
