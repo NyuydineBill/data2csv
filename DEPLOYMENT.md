@@ -18,7 +18,7 @@ For this workflow, you'll need to manually manage versions in your code before m
 
 1. **Update version in `setup.py`**:
    ```python
-   version='1.0.2',  # Change this before merging
+   version='1.0.3',  # Change this before merging
    ```
 
 2. **Update version in `admin_export/__init__.py`**:
